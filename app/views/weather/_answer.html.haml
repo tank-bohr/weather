@@ -1,0 +1,16 @@
+%table
+  %caption= answer[:city]
+  %tr
+    %th
+    %th Сегодня
+    %th Завтра
+    %th После завтра
+  - [:weather_description, :day_temperature, :night_temperature].each do |x|
+    %tr
+      %td
+        - if :day_temperature == x
+          днём
+        - elsif :night_temperature == x
+          ночью
+      - answer[x].each do |data|
+        %td= data

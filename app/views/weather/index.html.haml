@@ -3,25 +3,11 @@
   %br
   %input#city-inpt{:name => 'city'}
   %br
-  %input#favorite-checkbox{:name => 'favorite', :type => 'checkbox'}
+  %input#favorite-checkbox{:name => 'add_favorite', :type => 'checkbox'}
   %label{:for => 'favorite-checkbox'} Добавить в избранное
   %br
   %input{:type => 'submit', :value => "Отправить"}
 
 
 - if !@answer.nil?
-  %table
-    %tr
-      %th
-      %th Сегодня
-      %th Завтра
-      %th После завтра
-    - [:weather_description, :day_temperature, :night_temperature].each do |x|
-      %tr
-        %td
-          - if :day_temperature == x
-            днём
-          - elsif :night_temperature == x
-            ночью
-        - @answer[x].each do |data|
-          %td= data
+  = render :partial => 'answer', :locals => { :answer => @answer }

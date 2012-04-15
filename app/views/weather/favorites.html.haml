@@ -1,0 +1,6 @@
+- if @favorites.empty?
+  Ни одного города не добавлено в избранное
+- else
+  - @favorites.each do |f|
+    = render :partial => 'answer', :locals => { :answer => f }
+    %hr

@@ -1,6 +1,7 @@
 Weather::Application.routes.draw do
 
   match 'weather' => 'weather#index'
+  match 'favorites' => 'weather#favorites'
   match 'query_weather' => 'weather#query_weather', :via => :post
 
   # The priority is based upon order of creation:

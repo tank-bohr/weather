@@ -2,12 +2,20 @@
 module WeatherHelper
 
   class WeatherProvider
+    attr_reader :city
+
     @@site = 'http://pogoda.yandex.ru'
 
-    def initialize(city_name = 'Москва')
+    def initialize(arg)
       @agent = Mechanize.new
-      @city = city_name.capitalize
-      @page = find_city
+      if arg.kind_of?(Favorite)
+        @city = arg.city
+        @page = @agent.get(@@site + arg.url)
+      else
+        @city = arg.capitalize
+        @page = find_city
+      end
+
     end
 
 
@@ -19,7 +27,11 @@ module WeatherHelper
       %w[desc tday tnight].each do |item_class|
         elements[item_class] = @page.at("td.b-forecast__item div.b-forecast__#{item_class}")
       end
-      return !(elements['desc'].nil? && elements['tday'].nil? && elements['tnight'].nil?)
+      !(elements['desc'].nil? && elements['tday'].nil? && elements['tnight'].nil?)
+    end
+
+    def url
+      @page.uri.path
     end
 
     def day_temperature
@@ -33,6 +45,16 @@ module WeatherHelper
     def weather_description
       get_weather_info('desc')
     end
+
+    def answer
+      answer = {:city => @city}
+      [:weather_description, :day_temperature, :night_temperature].each do |item|
+        answer[item] = self.send(item)
+      end
+
+      answer
+    end
+
 
     private
     def find_city
@@ -79,7 +101,7 @@ module WeatherHelper
       # родитель - элемент-ряд tr (table row)
       # его(ряд) и будем итерировать
       current = elem.parent
-      (2..4).each do |i|
+      2.times do |i|
         if !current.children.nil? && ('b-forecast__gap__i' != current.children.attr('class').value)
           weather_info.push(current.children.text)
         end
@@ -87,7 +109,7 @@ module WeatherHelper
       end
 
       # Первые три элемента: сегодня, завтра, послезаавтра
-      return weather_info.first(3)
+      weather_info.first(3)
     end
 
   end
