@@ -1,5 +1,7 @@
 Weather::Application.routes.draw do
 
+  root :to => 'main#index'
+
   match 'weather' => 'weather#index'
   match 'favorites' => 'weather#favorites'
   match 'query_weather' => 'weather#query_weather', :via => :post
@@ -52,7 +54,7 @@ Weather::Application.routes.draw do
   #   end
 
   # You can have the root of your site routed with "root"
-  # just remember to delete public/index.html.
+  # just remember to delete public/index.html.default.
   # root :to => 'welcome#index'
 
   # See how all your routes lay out with "rake routes"
